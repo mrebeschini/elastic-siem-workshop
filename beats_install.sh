@@ -6,17 +6,21 @@ CLOUD_ID=""
 CLOUD_AUTH=""                                                                                                                                                                                                                            
 echo "Enter your Elastic Cloud CLOUD_ID then press [ENTER]"                                                                                                                                                                              
 read CLOUD_ID                                                                                                                                                                                                                            
-echo "Your CLOUD_ID is set to $CLOUD_ID"                                                                                                                                                                                                 
-printf "\n\n\n"                                                                                                                                                                                                                          
+echo "Your CLOUD_ID is set to: $CLOUD_ID"                                                                                                                                                                                                 
+printf "\n\n"                                                                                                                                                                                                                          
 echo "Enter you Elastic Cloud 'elastic' user password and then press [ENTER]"                                                                                                                                                            
 read CLOUD_AUTH                                                                                                                                                                                                                          
-echo "Your elastic password is set to $CLOUD_AUTH"                                                                                                                                                                                       
-sleep 5                                                                                                                                                                                                                                  
-printf "\n\n\n"                                                                                                                                                                                                                          
+echo "Your elastic password is set to: $CLOUD_AUTH\n\n"
+echo "Ready to Install? [Y|N]"
+read CONTINUE
+case "$CONTINUE" in
+ "Y") echo "Elastic Beats Installation Initiated";;
+ *) echo "Installation aborted";exit;;
+esac
+
 # Download Elastic yum repo configuration.                                                                                                                                                                                               
 echo "Downloading Elastic yum repo configuration from github."                                                                                                                                                                           
-sudo curl -O $CONFIG_REPOSITORY_URL/elastic-7.x.repo > /home/centos/elastic-7.x.repo                                                                                                                                                     
-sudo mv -v elastic-7.x.repo /etc/yum.repos.d/                                                                                                                                                                                            
+sudo curl -O $CONFIG_REPOSITORY_URL/elastic-7.x.repo > /etc/yum.repos.d/elastic-7.x.repo                                                                                                                                
 printf "\n\n\n"                                                                                                                                                                                                                          
 echo "Installing filebeat, packetbeat, metricbeat, and auditbeat rpms"                                                                                                                                                                   
 sudo yum install filebeat packetbeat metricbeat auditbeat -y                                                                                                                                                                             
@@ -24,22 +28,17 @@ printf "\n\n\n"
 echo "Downloading beats configuration files"                                                                                                                                                                                             
 sleep 2                                                                                                                                                                                                                                  
 printf "\n\n\n"                                                                                                                                                                                                                          
-sudo curl -O $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf > ./attack.rules.conf                                                                                                                                                       
-sudo mv -v ./auditd-attack.rules.conf  /etc/auditbeat/audit.rules.d/auditd-attack.rules.conf                                                                                                                                             
-sudo curl -O $CONFIG_REPOSITORY_URL/auditbeat.yml > ./auditbeat.yml 
-sudo mv -v ./auditbeat.yml /etc/auditbeat/auditbeat.yml                                                                                                                                                                                  
+sudo curl -O $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf > /etc/auditbeat/audit.rules.d/auditd-attack.rules.conf                                                                
+sudo curl -O $CONFIG_REPOSITORY_URL/auditbeat.yml > /etc/auditbeat/auditbeat.yml                                                                                                                             
 sudo chown root /etc/auditbeat/auditbeat.yml                                                                                                                                                                                             
 sudo chmod go-w /etc/auditbeat/auditbeat.yml                                                                                                                                                                                             
-sudo curl -O $CONFIG_REPOSITORY_URL/filebeat.yml > ./filebeat.yml                                                                                                                                                                        
-sudo mv -v ./filebeat.yml /etc/filebeat/filebeat.yml                                                                                                                                                                                     
+sudo curl -O $CONFIG_REPOSITORY_URL/filebeat.yml > /etc/filebeat/filebeat.yml                                                                                                                                  
 sudo chown root /etc/filebeat/filebeat.yml                                                                                                                                                                                               
 sudo chmod go-w /etc/filebeat/filebeat.yml                                                                                                                                                                                               
-sudo curl -O $CONFIG_REPOSITORY_URL/metricbeat.yml > ./metricbeat.yml                                                                                                                                                                    
-sudo mv -v ./metricbeat.yml /etc/metricbeat/metricbeat.yml                                                                                                                                                                               
+sudo curl -O $CONFIG_REPOSITORY_URL/metricbeat.yml > /etc/metricbeat/metricbeat.yml                                                                                                                        
 sudo chown root /etc/metricbeat/metricbeat.yml                                                                                                                                                                                           
 sudo chmod go-w /etc/metricbeat/metricbeat.yml                                                                                                                                                                                           
-sudo curl -O $CONFIG_REPOSITORY_URL/packetbeat.yml > ./packetbeat.yml                                                                                                                                                                    
-sudo mv -v ./packetbeat.yml  /etc/packetbeat/packetbeat.yml                                                                                                                                                                              
+sudo curl -O $CONFIG_REPOSITORY_URL/packetbeat.yml > /etc/packetbeat/packetbeat.yml                                                                                                                        
 sudo chown root  /etc/packetbeat/packetbeat.yml                                                                                                                                                                                          
 sudo chmod go-w /etc/packetbeat/packetbeat.yml                                                                                                                                                                                           
 printf "\n\n\n"                                                                                                                                                                                                                          
