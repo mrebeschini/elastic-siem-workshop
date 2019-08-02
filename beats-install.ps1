@@ -58,7 +58,7 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "Setting up Beat Modules..."
     $params = $('setup')
     & .\$BeatName.exe $params
-    Write-Host "Testing Beat Connectivity to Elastic Cloud..."
+    Write-Host "Testing $BeatName Connectivity to Elastic Cloud..."
     $params = $('test', 'output')
     & .\$BeatName.exe $params
     
