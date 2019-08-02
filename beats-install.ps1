@@ -66,8 +66,8 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "Testing $BeatName Connectivity to Elastic Cloud..."
     $params = $('test', 'output')
     & .\$BeatName.exe $params
+    Pop-Location
     
-
     #Create Windows Service for Beat and start service
     Write-Host "Creating $BeatName service..."
     New-Service -name $BeatName `
@@ -76,8 +76,7 @@ function InstallElasticBeat ([string]$BeatName)
                 -startupType Automatic
     Write-Host "Starting $BeatName service..."
     Start-Service -Name "$BeatName"
-    Write-Host "`n$BeatName Installation Completed!`n`n"
-    Pop-Location
+    Write-Host "`n$BeatName Installation Completed!`n"
 }
 
 InstallElasticBeat("winlogbeat")
