@@ -1,3 +1,5 @@
+cloud.id: "${CLOUD_ID}"
+cloud.auth: "elastic:${CLOUD_AUTH}"
 metricbeat.config.modules:
   path: ${path.config}/modules.d/*.yml
   reload.enabled: false
@@ -9,12 +11,10 @@ setup.template.settings:
 
 output.elasticsearch:
   hosts: ["localhost:9200"]
-  
+
 processors:
   - add_host_metadata:
       netinfo.enabled: true
   - add_cloud_metadata: ~
 
 xpack.monitoring.enabled: true
-
-
