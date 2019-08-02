@@ -27,6 +27,7 @@ processors:
       netinfo.enabled: true
   - add_cloud_metadata: ~
 
+cloud.id: "${CLOUD_ID}"
+cloud.auth: "elastic:${CLOUD_AUTH}"
+
 xpack.monitoring.enabled: true
-
-
