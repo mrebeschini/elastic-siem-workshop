@@ -25,9 +25,14 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "`nInstalling $BeatName..."
     
     #If Beat was already installed, disinstall service and cleanup first
+    
+    if (Get-Service $BeatName -ErrorAction SilentlyContinue) {
+        $service = Get-WmiObject -Class Win32_Service -Filter "name='$BeatName'"
+        $service.StopService()
+        Start-Sleep -s 1
+        $service.delete()
+    }
     if (Test-Path $BeatInstallFolder) {
-        Stop-Service -Name $BeatName
-        & "$BeatInstallFolder\uninstall-service-$BeatName.ps1"
         Remove-Item -Path $BeatInstallFolder -Recurse -Force
     }
 
@@ -62,15 +67,17 @@ function InstallElasticBeat ([string]$BeatName)
     $params = $('test', 'output')
     & .\$BeatName.exe $params
     
-    Pop-Location
 
     #Create Windows Service for Beat and start service
     Write-Host "Creating $BeatName service..."
-    & $BeatInstallFolder\\install-service-$BeatName.ps1
+    New-Service -name $BeatName `
+                -displayName $BeatName `
+                -binaryPathName "`"$BeatInstallFolder\$BeatName.exe`" -c `"$BeatInstallFolder\$BeatName.yml`" -path.home `"$BeatInstallFolder`"" `
+                -startupType Automatic
     Write-Host "Starting $BeatName service..."
     Start-Service -Name "$BeatName"
-    Write-Host "$BeatName Installation Completed!"
-    
+    Write-Host "`n$BeatName Installation Completed!`n`n"
+    Pop-Location
 }
 
 InstallElasticBeat("winlogbeat")
