@@ -1,5 +1,6 @@
 cloud.id: "${CLOUD_ID}"
 cloud.auth: "elastic:${CLOUD_AUTH}"
+
 packetbeat.interfaces.device: any
 packetbeat.flows:
   timeout: 30s
