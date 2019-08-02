@@ -4,9 +4,7 @@
     New-Item -Path $HomeDir -Type directory
 
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Invoke-WebRequest -Uri "$SrcUri/beats-install.ps1" -OutFile "$HomeDir\elastic-install.ps1"
+    Invoke-WebRequest -Uri "$SrcUri/beats-install.ps1" -OutFile "$HomeDir\beats-install.ps1"
     Invoke-WebRequest -Uri "$SrcUri/sysmon-install.ps1" -OutFile "$HomeDir\sysmon-install.ps1"
-    Invoke-WebRequest -Uri "$SrcUri/winlogbeat.yml" -OutFile "$HomeDir\winlogbeat.yml"
-    Invoke-WebRequest -Uri "$SrcUri/metricbeat.yml" -OutFile "$HomeDir\metricbeat.yml"
 </powershell>
 <persist>true</persist>
