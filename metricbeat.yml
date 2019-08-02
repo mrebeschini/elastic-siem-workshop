@@ -1,20 +1,51 @@
 cloud.id: "${CLOUD_ID}"
 cloud.auth: "elastic:${CLOUD_AUTH}"
-metricbeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: false
+packetbeat.interfaces.device: any
+packetbeat.flows:
+  timeout: 30s
+  period: 10s
+
+packetbeat.protocols:
+- type: icmp
+  enabled: true
+- type: amqp
+  ports: [5672]
+- type: cassandra
+  ports: [9042]
+- type: dns
+  ports: [53]
+  include_authorities: true
+  include_additionals: true
+- type: http
+  ports: [80, 8080, 8000, 5000, 8002]
+- type: memcache
+  ports: [11211]
+- type: mysql
+  ports: [3306]
+- type: pgsql
+  ports: [5432]
+- type: redis
+  ports: [6379]
+- type: thrift
+  ports: [9090]
+- type: mongodb
+  ports: [27017]
+- type: nfs
+  ports: [2049]
+- type: tls
+  ports: [443]
 
 setup.template.settings:
   index.number_of_shards: 1
   index.number_of_replicas: 1
   index.codec: best_compression
 
-output.elasticsearch:
-  hosts: ["localhost:9200"]
+packetbeat.procs:
+  enabled: true
 
 processors:
   - add_host_metadata:
-      netinfo.enabled: true
+        netinfo.enabled: true
   - add_cloud_metadata: ~
 
 xpack.monitoring.enabled: true
