@@ -55,6 +55,13 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "Adding CLOUD_AUTH to $BeatName keystore..."
     $params = $('keystore','add','CLOUD_AUTH','--stdin','--force')
     Write-Output $CloudAuth | & .\$BeatName.exe $params
+    Write-Host "Setting up Beat Modules..."
+    $params = $('setup')
+    & .\$BeatName.exe $params
+    Write-Host "Testing Beat Connectivity to Elastic Cloud..."
+    $params = $('test', 'output')
+    & .\$BeatName.exe $params
+    
     Pop-Location
 
     #Create Windows Service for Beat and start service
