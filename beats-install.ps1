@@ -8,7 +8,7 @@ Write-Host "Your CLOUD_ID is set to: $CloudID`n"
 $CloudAuth = Read-Host -Prompt 'Enter you Elastic Cloud ''elastic'' user password and then press [ENTER]'
 Write-Host "You elastic password is set to: $CloudAuth`n"
 
-$Continue = Read-Host -Prompt 'Ready to Install? [Y|N]'
+$Continue = Read-Host -Prompt 'Ready to Install? [y|n]'
 if (!($Continue -ieq 'Y'))
 {
     Write-Output "Installation aborted"
