@@ -1,3 +1,6 @@
+cloud.id: "${CLOUD_ID}"
+cloud.auth: "elastic:${CLOUD_AUTH}"
+
 winlogbeat.event_logs:
   - name: Application
     ignore_older: 72h
