@@ -6,15 +6,14 @@ CLOUD_ID=""
 CLOUD_AUTH=""
 echo "Enter your Elastic Cloud CLOUD_ID then press [ENTER]"
 read CLOUD_ID
-echo "Your CLOUD_ID is set to $CLOUD_ID\n"
+echo "Your CLOUD_ID is set to $CLOUD_ID\n\n"
 echo "Enter you Elastic Cloud 'elastic' user password and then press [ENTER]"
 read CLOUD_AUTH
-echo "Your elastic password is set to $CLOUD_AUTH"
-sleep 5
-echo "Ready to Install? [Y|N]"
+echo "Your elastic password is set to $CLOUD_AUTH\n\n"
+echo "Ready to Install? [y|n]"
 read CONTINUE
 case "$CONTINUE" in
- "Y|y") echo "Elastic Beats Installation Initiated";;
+ "y") echo "Elastic Beats Installation Initiated";;
  *) echo "Installation aborted";exit;;
 esac
 # Download Elastic yum repo configuration.
