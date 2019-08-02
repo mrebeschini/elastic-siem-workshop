@@ -1,0 +1,12 @@
+<powershell>
+    $SrcUri = "http://vpn.rebeschini.com:8108/new"
+    $HomeDir = "C:\Users\Administrator\Elastic\"
+    New-Item -Path $HomeDir -Type directory
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest -Uri "$SrcUri/beats-install.ps1" -OutFile "$HomeDir\elastic-setup.ps1"
+    Invoke-WebRequest -Uri "$SrcUri/sysmon-install.ps1" -OutFile "$HomeDir\sysmon-setup.ps1"
+    Invoke-WebRequest -Uri "$SrcUri/winlogbeat.yml" -OutFile "$HomeDir\winlogbeat.yml"
+    Invoke-WebRequest -Uri "$SrcUri/metricbeat.yml" -OutFile "$HomeDir\metricbeat.yml"
+</powershell>
+<persist>true</persist>

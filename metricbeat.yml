@@ -1,0 +1,20 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 1
+  index.codec: best_compression
+
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+  
+processors:
+  - add_host_metadata:
+      netinfo.enabled: true
+  - add_cloud_metadata: ~
+
+xpack.monitoring.enabled: true
+
+
