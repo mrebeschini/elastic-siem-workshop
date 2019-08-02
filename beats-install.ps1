@@ -8,7 +8,7 @@ Write-Host "Your CLOUD_ID is set to: $CloudID`n"
 $CloudAuth = Read-Host -Prompt 'Enter you Elastic Cloud ''elastic'' user password and then press [ENTER]'
 Write-Host "You elastic password is set to: $CloudAuth`n"
 
-$Continue = Read-Host -Prompt 'Ready to Install? [y|n]'
+$Continue = Read-Host -Prompt 'Ready to Install? [Y|N]'
 if (!($Continue -ieq 'Y'))
 {
     Write-Output "Installation aborted"
@@ -24,7 +24,7 @@ function InstallElasticBeat ([string]$BeatName)
     
     Write-Host "`nInstalling $BeatName..."
     
-    #If Beat was already installed, disinsall service and cleanup first
+    #If Beat was already installed, disinstall service and cleanup first
     if (Test-Path $BeatInstallFolder) {
         Stop-Service -Name $BeatName
         & "$BeatInstallFolder\uninstall-service-$BeatName.ps1"
@@ -43,15 +43,17 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "Updating $BeatName.yml..."
     Rename-Item -Path $BeatInstallFolder\$BeatName.yml -NewName $BeatInstallFolder\$BeatName.yml.bak
     Invoke-WebRequest -Uri $ConfigRepositoryURL/$BeatName.yml -OutFile $BeatInstallFolder\$BeatName.yml
-    Add-Content $BeatInstallFolder\$BeatName.yml "cloud.id: $CloudID"
     
-    #Create Beat keystore and add 'elastic' user password to it
+    #Create Beat keystore and add CLOUD_AUTH and CLOUD_ID secrets
     Write-Host "Creating $BeatName keystore..."
     $params = $('keystore','create','--force')
     & $BeatInstallFolder\$BeatName.exe $params
-    Write-Host "Adding ES_PWD to $BeatName keystore..."
-    $params = $('keystore','add','ES_PWD','--stdin','--force')
+    Write-Host "Adding CLOUD_AUTH to $BeatName keystore..."
+    $params = $('keystore','add','CLOUD_AUTH','--stdin','--force')
     Write-Output $CloudAuth | & $BeatInstallFolder\$BeatName.exe $params
+    Write-Host "Adding CLOUD_ID to $BeatName keystore..."
+    $params = $('keystore','add','CLOUD_ID','--stdin','--force')
+    Write-Output $CloudID | & $BeatInstallFolder\$BeatName.exe $params
 
     #Create Windows Service for Beat and start service
     Write-Host "Creating $BeatName service..."
