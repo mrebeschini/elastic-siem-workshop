@@ -1,6 +1,6 @@
 #!/bin/bash                                                                                                                                                                                                                              
 # Setup beats on Linux                                                                                                                                                                                                                   
-CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/2019BSidesLV/master/"                                                                                                                                               
+CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/2019BSidesLV/master"                                                                                                                                               
 
 # Uninstall Beats if already installed
 sudo yum -y -q remove filebeat metricbeat packetbeat auditbeat 2>1 /dev/null
@@ -27,8 +27,8 @@ sudo mv -v elastic-7.x.repo /etc/yum.repos.d/
 echo -e "\n\nInstalling filebeat, packetbeat, metricbeat, and auditbeat rpms"
 sudo yum install filebeat packetbeat metricbeat auditbeat -y
 echo -e "\n\nDownloading beats configuration files \n\n"
-sudo curl -O $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf > ./attack.rules.conf
-sudo mv -v ./attack.rules.conf  /etc/auditbeat/audit.rules.d/auditd-attack.rules.conf
+sudo curl -O $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf 
+sudo mv -v ./auditd-attack.rules.conf /etc/auditbeat/audit.rules.d/auditd-attack.rules.conf
 sudo curl -O $CONFIG_REPOSITORY_URL/auditbeat.yml > ./auditbeat.yml
 sudo mv -v ./auditbeat.yml /etc/auditbeat/auditbeat.yml
 sudo chown root /etc/auditbeat/auditbeat.yml
