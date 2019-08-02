@@ -43,24 +43,27 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "Updating $BeatName.yml..."
     Rename-Item -Path $BeatInstallFolder\$BeatName.yml -NewName $BeatInstallFolder\$BeatName.yml.bak
     Invoke-WebRequest -Uri $ConfigRepositoryURL/$BeatName.yml -OutFile $BeatInstallFolder\$BeatName.yml
-    
+
     #Create Beat keystore and add CLOUD_AUTH and CLOUD_ID secrets
+    Push-Location $BeatInstallFolder
     Write-Host "Creating $BeatName keystore..."
     $params = $('keystore','create','--force')
-    & $BeatInstallFolder\$BeatName.exe $params
-    Write-Host "Adding CLOUD_AUTH to $BeatName keystore..."
-    $params = $('keystore','add','CLOUD_AUTH','--stdin','--force')
-    Write-Output $CloudAuth | & $BeatInstallFolder\$BeatName.exe $params
+    & .\$BeatName.exe $params
     Write-Host "Adding CLOUD_ID to $BeatName keystore..."
     $params = $('keystore','add','CLOUD_ID','--stdin','--force')
-    Write-Output $CloudID | & $BeatInstallFolder\$BeatName.exe $params
+    Write-Output $CloudID | & .\$BeatName.exe $params
+    Write-Host "Adding CLOUD_AUTH to $BeatName keystore..."
+    $params = $('keystore','add','CLOUD_AUTH','--stdin','--force')
+    Write-Output $CloudAuth | & .\$BeatName.exe $params
+    Pop-Location
 
     #Create Windows Service for Beat and start service
     Write-Host "Creating $BeatName service..."
-    & $BeatInstallFolder\install-service-$BeatName.ps1
+    & $BeatInstallFolder\\install-service-$BeatName.ps1
     Write-Host "Starting $BeatName service..."
     Start-Service -Name "$BeatName"
     Write-Host "$BeatName Installation Completed!"
+    
 }
 
 InstallElasticBeat("winlogbeat")
