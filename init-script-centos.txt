@@ -1,0 +1,4 @@
+#!/bin/bash
+curl https://raw.githubusercontent.com/mrebeschini/2019BSidesLV/master/beats_install.sh > /home/centos/beats_install.sh
+chown centos:centos /home/centos/beats_install.sh
+chmod 755 /home/centos/beats_install.sh
