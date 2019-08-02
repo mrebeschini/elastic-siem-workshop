@@ -1,5 +1,6 @@
 $StackVersion = '7.3.0'
 $InstallFolder = "C:\Program Files\Elastic"
+$ConfigRepositoryURL = "https://raw.githubusercontent.com/mrebeschini/2019BSidesLV/master/"
 
 $CloudID = Read-Host -Prompt "Enter your Elastic Cloud CLOUD_ID then press [ENTER]"
 Write-Host "Your CLOUD_ID is set to: $CloudID`n"
@@ -41,7 +42,8 @@ function InstallElasticBeat ([string]$BeatName)
     #Update Beat configuration using workshop template and add Elastic Cloud cluster information to it (CloudId)
     Write-Host "Updating $BeatName.yml..."
     Rename-Item -Path $BeatInstallFolder\$BeatName.yml -NewName $BeatInstallFolder\$BeatName.yml.bak
-    Copy-Item -Path ".\$BeatName.yml" -Destination $BeatInstallFolder\$BeatName.yml
+    Invoke-WebRequest -Uri $ConfigRepositoryURL/$BeatName.yml -OutFile $BeatInstallFolder\$BeatName.yml
+    #Copy-Item -Path ".\$BeatName.yml" -Destination $BeatInstallFolder\$BeatName.yml
     Add-Content $BeatInstallFolder\$BeatName.yml "cloud.id: $CloudID"
     
     #Create Beat keystore and add 'elastic' user password to it
