@@ -21,14 +21,12 @@ case "$CONTINUE" in
 esac
 
 # Download Elastic yum repo configuration.
-echo "Downloading Elastic yum repo configuration from github."
+echo -e "\n\nDownloading Elastic yum repo configuration from github."
 sudo curl -O $CONFIG_REPOSITORY_URL/elastic-7.x.repo > /home/centos/elastic-7.x.repo
 sudo mv -v elastic-7.x.repo /etc/yum.repos.d/
-printf "\n\n\n"
-echo "Installing filebeat, packetbeat, metricbeat, and auditbeat rpms"
+echo -e "\n\nInstalling filebeat, packetbeat, metricbeat, and auditbeat rpms"
 sudo yum install filebeat packetbeat metricbeat auditbeat -y
-printf "\n\n\n"
-echo "Downloading beats configuration files \n\n"
+echo -e "\n\nDownloading beats configuration files \n\n"
 sudo curl -O $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf > ./attack.rules.conf
 sudo mv -v ./auditd-attack.rules.conf  /etc/auditbeat/audit.rules.d/auditd-attack.rules.conf
 sudo curl -O $CONFIG_REPOSITORY_URL/auditbeat.yml > ./auditbeat.yml
@@ -47,8 +45,7 @@ sudo curl -O $CONFIG_REPOSITORY_URL/packetbeat.yml > ./packetbeat.yml
 sudo mv -v ./packetbeat.yml  /etc/packetbeat/packetbeat.yml
 sudo chown root  /etc/packetbeat/packetbeat.yml
 sudo chmod go-w /etc/packetbeat/packetbeat.yml
-echo -e "\n\n\n"
-echo "Setting up keystore with Elastic Cloud credentials"
+echo -e "\n\nSetting up keystore with Elastic Cloud credentials"
 sudo auditbeat keystore create --force
 sudo filebeat keystore create --force
 sudo packetbeat keystore create --force
@@ -70,8 +67,7 @@ echo -e "\n\nSetting up filebeat"
 sudo filebeat modules enable system
 sudo filebeat setup
 sudo systemctl start filebeat
-printf "\n\n\n"
-echo "Setting up packetbeat"
+echo -e "\n\nSetting up packetbeat"
 sudo packetbeat setup
 sudo systemctl start packetbeat
 echo -e "\n\nSetting up metricbeat"
