@@ -14,7 +14,7 @@ if (!($Continue -ieq 'Y'))
     Write-Output "Installation aborted"
     Exit
 }
-Write-Output "Elastic Beats Installation Initiated"
+Write-Output "Elastic Beats $StackVersion Installation Initiated"
 
 function InstallElasticBeat ([string]$BeatName)
 {
