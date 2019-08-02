@@ -43,7 +43,6 @@ function InstallElasticBeat ([string]$BeatName)
     Write-Host "Updating $BeatName.yml..."
     Rename-Item -Path $BeatInstallFolder\$BeatName.yml -NewName $BeatInstallFolder\$BeatName.yml.bak
     Invoke-WebRequest -Uri $ConfigRepositoryURL/$BeatName.yml -OutFile $BeatInstallFolder\$BeatName.yml
-    #Copy-Item -Path ".\$BeatName.yml" -Destination $BeatInstallFolder\$BeatName.yml
     Add-Content $BeatInstallFolder\$BeatName.yml "cloud.id: $CloudID"
     
     #Create Beat keystore and add 'elastic' user password to it
