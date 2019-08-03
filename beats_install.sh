@@ -58,8 +58,8 @@ echo $CLOUD_ID|sudo packetbeat keystore add CLOUD_ID --stdin --force
 echo $CLOUD_AUTH|sudo packetbeat keystore add --stdin CLOUD_AUTH --force
 echo $CLOUD_ID|sudo metricbeat keystore add CLOUD_ID --stdin --force
 echo $CLOUD_AUTH|sudo metricbeat keystore add --stdin CLOUD_AUTH --force
-#echo -e "\n\nStopping auditd deamon"
-#sudo service auditd stop
+echo -e "\n\nStopping auditd deamon"
+sudo service auditd stop
 echo -e "\n\nSetting up auditbeat"
 sudo auditbeat setup
 sudo systemctl start auditbeat
