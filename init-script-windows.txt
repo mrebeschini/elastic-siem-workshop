@@ -1,5 +1,5 @@
 <powershell>
-    $SrcUri = "https://raw.githubusercontent.com/mrebeschini/2019BSidesLV/master/"
+    $SrcUri = "https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
     $HomeDir = "C:\Users\Administrator\Elastic\"
     New-Item -Path $HomeDir -Type directory
 
