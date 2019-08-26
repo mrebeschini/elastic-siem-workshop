@@ -1,5 +1,5 @@
 #!/bin/bash                                                                                                                                                                                                                              
-CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master" 
+CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/" 
 
 echo "Elastic Beats Installer"
 echo "-----------------------"
