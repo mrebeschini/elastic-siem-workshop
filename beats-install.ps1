@@ -1,6 +1,6 @@
 $StackVersion = '7.3.0'
 $InstallFolder = "C:\Program Files\Elastic"
-$ConfigRepositoryURL = "https://raw.githubusercontent.com/mrebeschini/2019BSidesLV/master/"
+$ConfigRepositoryURL = "https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
 
 $CloudID = Read-Host -Prompt "Enter your Elastic Cloud CLOUD_ID then press [ENTER]"
 Write-Host "Your CLOUD_ID is set to: $CloudID`n"
