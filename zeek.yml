@@ -1,0 +1,23 @@
+# Module: zeek
+# Docs: https://www.elastic.co/guide/en/beats/filebeat/7.3/filebeat-module-zeek.html
+
+- module: zeek
+  # All logs
+  connection:
+    enabled: true
+    var.paths: [ "/usr/local/bro/logs/current/conn.*.log", "/home/ubuntu/zeek/logs/conn.*.log" ]
+  dns:
+    enabled: true
+    var.paths: [ "/usr/local/bro/logs/current/dns.*.log", "/home/ubuntu/zeek/logs/dns.*.log" ]
+  http:
+    enabled: true
+    var.paths: [ "/usr/local/bro/logs/current/http.*.log", "/home/ubuntu/zeek/logs/http.*.log" ]
+  files:
+    enabled: true
+    var.paths: [ "/usr/local/bro/logs/current/files.*.log", "/home/ubuntu/zeek/logs/files.*.log" ]
+  ssl:
+    enabled: true
+    var.paths: [ "/usr/local/bro/logs/current/ssl.*.log", "/home/ubuntu/zeek/logs/ssl.*.log" ]
+  notice:
+    enabled: true
+    var.paths: [ "/usr/local/bro/logs/current/notice.*.log", "/home/ubuntu/zeek/logs/notice.*.log" ]
