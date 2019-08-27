@@ -1,6 +1,7 @@
 #!/bin/bash                                                                                                                                                                                                                              
 CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/" 
 ZEEK_DIR=$HOME/zeek
+STACK_VERSION=7.3.1
 
 echo "*****************************************"
 echo "* Elastic SIEM Workshop Beats Installer *"
@@ -41,7 +42,7 @@ function install_beat() {
     echo -e "\n*** Installing $BEAT_NAME ****";
 
     if [ $BEAT_NAME == "heartbeat" ]; then
-        BEAT_PKG_NAME="heartbeat-elastic" 
+        BEAT_PKG_NAME="heartbeat-elastic"
     else
         BEAT_PKG_NAME=$BEAT_NAME
     fi 
@@ -50,10 +51,10 @@ function install_beat() {
     if [ $? -eq 0 ]; then 
         echo "$BEAT_NAME was previously installed. Uninstalling first..."
         yum -y -q remove $BEAT_PKG_NAME &> /dev/null
-        rm -Rf /etc/$BEAT_NAME /var/lib/$BEAT_NAME /var/log/$BEAT_NAME
+        rm -Rf /etc/$BEAT_NAME /var/lib/$BEAT_NAME /var/log/$BEAT_NAME /usr/share/$BEAT_NAME
     fi
 
-    yum -y install $BEAT_PKG_NAME
+    yum -y install $BEAT_PKG_NAME-$STACK_VERSION
     echo "Downloading $BEAT_NAME config file..."
     wget -q -N $CONFIG_REPOSITORY_URL/$BEAT_NAME.yml -P /etc/$BEAT_NAME
     chmod go-w /etc/$BEAT_NAME/$BEAT_NAME.yml
@@ -75,6 +76,10 @@ function install_beat() {
             ;;
         filebeat)
             $BEAT_NAME modules enable system
+            
+            #Temporary fix for issue https://github.com/elastic/beats/pull/13308 (can remove this once 7.3.2 is released)
+            wget -q https://raw.githubusercontent.com/elastic/beats/7.3/filebeat/module/system/auth/ingest/pipeline.json -O /usr/share/filebeat/module/system/auth/ingest/pipeline.json
+            
             $BEAT_NAME modules enable zeek
             wget -q -N $CONFIG_REPOSITORY_URL/zeek-logs.tar.gz -P /tmp
             if [ -d $ZEEK_DIR/logs/ ]; then
@@ -97,10 +102,10 @@ function install_beat() {
     echo -e "$BEAT_NAME setup complete"
 }
 
-install_beat "auditbeat"
-install_beat "packetbeat"
-install_beat "metricbeat"
+#install_beat "auditbeat"
+#install_beat "packetbeat"
+#install_beat "metricbeat"
 install_beat "filebeat"
-install_beat "heartbeat"
+#install_beat "heartbeat"
 
 echo -e "\n\nSetup complete!"
