@@ -3,9 +3,17 @@ $InstallFolder = "C:\Program Files\Elastic"
 $ConfigRepositoryURL = "https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
 
 $CloudID = Read-Host -Prompt "Enter your Elastic Cloud CLOUD_ID then press [ENTER]"
+if (!$CloudID) {
+    Write-Host "Error: CLOUD_ID must be set to a non-empty value!"
+    Exit
+}
 Write-Host "Your CLOUD_ID is set to: $CloudID`n"
 
 $CloudAuth = Read-Host -Prompt 'Enter you Elastic Cloud ''elastic'' user password and then press [ENTER]'
+if (!$CloudID) {
+    Write-Host "Error: Your ''elastic'' user password must be set to a non-empty value!"
+    Exit
+}
 Write-Host "You elastic password is set to: $CloudAuth`n"
 
 $Continue = Read-Host -Prompt 'Ready to Install? [Y|N]'
