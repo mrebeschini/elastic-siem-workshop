@@ -1,0 +1,8 @@
+heartbeat.monitors:
+- type: http
+  urls: ["https://www.elastic.co"]
+  schedule: '@every 5s'
+  timeout: 10s
+  
+cloud.id: "${CLOUD_ID}"
+cloud.auth: "elastic:${CLOUD_AUTH}"
