@@ -102,10 +102,10 @@ function install_beat() {
     echo -e "$BEAT_NAME setup complete"
 }
 
-#install_beat "auditbeat"
-#install_beat "packetbeat"
-#install_beat "metricbeat"
+install_beat "auditbeat"
+install_beat "packetbeat"
+install_beat "metricbeat"
 install_beat "filebeat"
-#install_beat "heartbeat"
+install_beat "heartbeat"
 
 echo -e "\n\nSetup complete!"
