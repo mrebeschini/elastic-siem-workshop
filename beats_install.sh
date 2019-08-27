@@ -37,6 +37,8 @@ wget -q -N $CONFIG_REPOSITORY_URL/elastic-7.x.repo -P /etc/yum.repos.d/
 
 function install_beat() {
     BEAT_NAME=$1
+    echo -e "\n*** Installing $BEAT_NAME ****";
+
     if [ $BEAT_NAME == "heartbeat" ]; then
         BEAT_PKG_NAME="heartbeat-elastic" 
     else
@@ -50,7 +52,6 @@ function install_beat() {
         rm -Rf /etc/$BEAT_NAME /var/lib/$BEAT_NAME /var/log/$BEAT_NAME
     fi
 
-    echo -e "\n*** Installing $BEAT_NAME ****";
     yum -y install $BEAT_PKG_NAME
     echo "Downloading $BEAT_NAME config file..."
     wget -q -N $CONFIG_REPOSITORY_URL/$BEAT_NAME.yml -P /etc/$BEAT_NAME
@@ -78,8 +79,8 @@ function install_beat() {
 
     echo "Setting up $BEAT_NAME"
     $BEAT_NAME setup
+    systemctl enable $BEAT_PKG_NAME
     systemctl start $BEAT_PKG_NAME
-    chkconfig --add $BEAT_PKG_NAME
     $BEAT_NAME test output
     echo -e "$BEAT_NAME setup complete"
 }
