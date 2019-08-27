@@ -1,8 +1,9 @@
 #!/bin/bash                                                                                                                                                                                                                              
 CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/" 
 
-echo "Elastic Beats Installer"
-echo "-----------------------"
+echo "*****************************************"
+echo "* Elastic SIEM Workshop Beats Installer *"
+echo "*****************************************"
 
 if [[ $EUID -ne 0 ]]; then
    echo "Error: this script must be run as root." 
@@ -26,8 +27,8 @@ echo -e "Your 'elastic' user password is set to $CLOUD_AUTH\n"
 echo "Ready to Install? [y|n]"
 read CONTINUE
 case "$CONTINUE" in
- [Yy]) echo "Elastic Beats Installation Initiated";;
-    *) echo "Installation aborted";exit;;
+ [Yy]) echo -e "\nElastic Beats Installation Initiated";;
+    *) echo -e "\nInstallation aborted";exit;;
 esac
 
 echo -e "\nDownloading Elastic yum repo configuration..."
@@ -42,10 +43,10 @@ function install_beat() {
         BEAT_PKG_NAME=$BEAT_NAME
     fi 
 
-    yum -q list installed $BEAT_NAME &> /dev/null
-    if [ $? > 0 ]; then 
+    yum -q list installed $BEAT_PKG_NAME &> /dev/null
+    if [ $? -eq 0 ]; then 
         echo "$BEAT_NAME was previously installed. Uninstalling first..."
-        yum -y -q remove $BEAT_PKG_NAME 2>1 /dev/null
+        yum -y -q remove $BEAT_PKG_NAME &> /dev/null
         rm -Rf /etc/$BEAT_NAME /var/lib/$BEAT_NAME /var/log/$BEAT_NAME
     fi
 
@@ -55,26 +56,30 @@ function install_beat() {
     wget -q -N $CONFIG_REPOSITORY_URL/$BEAT_NAME.yml -P /etc/$BEAT_NAME
     chmod go-w /etc/$BEAT_NAME/$BEAT_NAME.yml
     echo "Setting up $BEAT_NAME keystore with Elastic Cloud credentials"
-    $BEAT_NAME keystore create --force
-    echo $CLOUD_ID | $BEAT_NAME keystore add CLOUD_ID --stdin --force
+    $BEAT_NAME keystore create
+    echo $CLOUD_ID | $BEAT_NAME keystore add CLOUD_ID --stdin 
     echo $CLOUD_AUTH | $BEAT_NAME keystore add --stdin CLOUD_AUTH --force
+    if [ $? -ne 0 ]; then
+        echo "Invalid CLOUD_ID. Installation aborted!"
+        exit 2
+    fi
     
     case $BEAT_NAME in
         auditbeat)
             wget -q -N $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf -P /etc/auditbeat/audit.rules.d
             echo "Stopping auditd deamon"
-            service auditd stop > /dev/null
-            chkconfig auditd off
+            service auditd stop &> /dev/null
+            chkconfig auditd off &> /dev/null
             ;;
         filebeat)
-            $beatname modules enable system
+            $BEAT_NAME modules enable system
             ;;
     esac
 
     echo "Setting up $BEAT_NAME"
     $BEAT_NAME setup
-    systemctl start $BEAT_NAME
-    chkconfig --add $BEAT_NAME
+    systemctl start $BEAT_PKG_NAME
+    chkconfig --add $BEAT_PKG_NAME
     $BEAT_NAME test output
     echo -e "$BEAT_NAME setup complete"
 }
@@ -85,4 +90,4 @@ install_beat "metricbeat"
 install_beat "filebeat"
 install_beat "heartbeat"
 
-echo -e "\n\nSetup complete"
+echo -e "\n\nSetup complete!"
