@@ -5,19 +5,19 @@
   # All logs
   connection:
     enabled: true
-    var.paths: [ "/usr/local/bro/logs/current/conn.*.log", "/home/ubuntu/zeek/logs/conn.*.log" ]
+    var.paths: [ "/usr/local/bro/logs/current/conn.*.log", "/root/zeek/logs/conn.*.log" ]
   dns:
     enabled: true
-    var.paths: [ "/usr/local/bro/logs/current/dns.*.log", "/home/ubuntu/zeek/logs/dns.*.log" ]
+    var.paths: [ "/usr/local/bro/logs/current/dns.*.log", "/root/zeek/logs/dns.*.log" ]
   http:
     enabled: true
-    var.paths: [ "/usr/local/bro/logs/current/http.*.log", "/home/ubuntu/zeek/logs/http.*.log" ]
+    var.paths: [ "/usr/local/bro/logs/current/http.*.log", "/root/zeek/logs/http.*.log" ]
   files:
     enabled: true
-    var.paths: [ "/usr/local/bro/logs/current/files.*.log", "/home/ubuntu/zeek/logs/files.*.log" ]
+    var.paths: [ "/usr/local/bro/logs/current/files.*.log", "/root/zeek/logs/files.*.log" ]
   ssl:
     enabled: true
-    var.paths: [ "/usr/local/bro/logs/current/ssl.*.log", "/home/ubuntu/zeek/logs/ssl.*.log" ]
+    var.paths: [ "/usr/local/bro/logs/current/ssl.*.log", "/root/zeek/logs/ssl.*.log" ]
   notice:
     enabled: true
-    var.paths: [ "/usr/local/bro/logs/current/notice.*.log", "/home/ubuntu/zeek/logs/notice.*.log" ]
+    var.paths: [ "/usr/local/bro/logs/current/notice.*.log", "/root/zeek/logs/notice.*.log" ]
