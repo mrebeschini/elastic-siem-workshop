@@ -1,5 +1,6 @@
 #!/bin/bash                                                                                                                                                                                                                              
 CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/" 
+ZEEK_DIR=$HOME/zeek
 
 echo "*****************************************"
 echo "* Elastic SIEM Workshop Beats Installer *"
@@ -74,6 +75,17 @@ function install_beat() {
             ;;
         filebeat)
             $BEAT_NAME modules enable system
+            $BEAT_NAME modules enable zeek
+            wget -q -N $CONFIG_REPOSITORY_URL/zeek-logs.tar.gz -P /tmp
+            if [ -d $ZEEK_DIR/logs/ ]; then
+                rm -Rf $ZEEK_DIR/logs/
+            else
+                mkdir -p $ZEEK_DIR/logs/
+            fi
+            tar xfvz /tmp/zeek-logs.tar.gz -C $ZEEK_DIR/logs &> /dev/null
+            rm -f /tmp/zeek-logs.tar.gz
+            for i in $ZEEK_DIR/logs/*.log.gz; do gzip -d $i; done
+            wget -q $CONFIG_REPOSITORY_URL/zeek.yml -O /etc/filebeat/modules.d/zeek.yml
             ;;
     esac
 
