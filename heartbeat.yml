@@ -2,12 +2,12 @@ heartbeat.monitors:
 - type: http
   name: 'Elastic Public Website'
   urls: ["https://www.elastic.co"]
-  schedule: '@every 5s'
+  schedule: '@every 30s'
   timeout: 10s
 - type: icmp
   name: 'Google Public DNS'
   hosts: ["8.8.8.8"]
-  schedule: '*/5 * * * * * *'
+  schedule: '*/30 * * * * * *'
 
 cloud.id: "${CLOUD_ID}"
 cloud.auth: "elastic:${CLOUD_AUTH}"
