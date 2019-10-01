@@ -1,7 +1,7 @@
 #!/bin/bash                                                                                                                                                                                                                              
 CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/" 
 ZEEK_DIR=$HOME/zeek
-STACK_VERSION=7.3.1
+STACK_VERSION=7.4.0
 
 echo "*****************************************"
 echo "* Elastic SIEM Workshop Beats Installer *"
@@ -76,10 +76,6 @@ function install_beat() {
             ;;
         filebeat)
             $BEAT_NAME modules enable system
-            
-            #Temporary fix for issue https://github.com/elastic/beats/pull/13308 (can remove this once 7.3.2 is released)
-            wget -q https://raw.githubusercontent.com/elastic/beats/7.3/filebeat/module/system/auth/ingest/pipeline.json -O /usr/share/filebeat/module/system/auth/ingest/pipeline.json
-            
             $BEAT_NAME modules enable zeek
             wget -q -N $CONFIG_REPOSITORY_URL/zeek-logs.tar.gz -P /tmp
             if [ -d $ZEEK_DIR/logs/ ]; then
