@@ -1,4 +1,4 @@
-$StackVersion = '7.3.1'
+$StackVersion = '7.4.0'
 $InstallFolder = "C:\Program Files\Elastic"
 $ConfigRepositoryURL = "https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
 
@@ -29,11 +29,11 @@ function InstallElasticBeat ([string]$BeatName)
     $ArtifactURI = "https://artifacts.elastic.co/downloads/beats/$BeatName/$BeatName-" + $StackVersion + "-windows-x86_64.zip"
     $LocalFilePath = "C:\Windows\Temp\$BeatName.zip"
     $BeatInstallFolder = $InstallFolder + '\' + "$BeatName"
-    
+
     Write-Host "`nInstalling $BeatName..."
-    
+
     #If Beat was already installed, disinstall service and cleanup first
-    
+
     if (Get-Service $BeatName -ErrorAction SilentlyContinue) {
         $service = Get-WmiObject -Class Win32_Service -Filter "name='$BeatName'"
         $service.StopService()
@@ -49,9 +49,9 @@ function InstallElasticBeat ([string]$BeatName)
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest -Uri $ArtifactURI -OutFile $LocalFilePath
     Expand-Archive -Path $LocalFilePath -DestinationPath $InstallFolder
-    Rename-Item -Path "$InstallFolder\$BeatName-$StackVersion-windows-x86_64" -NewName $BeatInstallFolder 
+    Rename-Item -Path "$InstallFolder\$BeatName-$StackVersion-windows-x86_64" -NewName $BeatInstallFolder
     Remove-Item -Path $LocalFilePath
-    
+
     #Update Beat configuration using workshop template and add Elastic Cloud cluster information to it (CloudId)
     Write-Host "Updating $BeatName.yml..."
     Rename-Item -Path $BeatInstallFolder\$BeatName.yml -NewName $BeatInstallFolder\$BeatName.yml.bak
@@ -75,7 +75,7 @@ function InstallElasticBeat ([string]$BeatName)
     $params = $('test', 'output')
     & .\$BeatName.exe $params
     Pop-Location
-    
+
     #Create Windows Service for Beat and start service
     Write-Host "Creating $BeatName service..."
     New-Service -name $BeatName `
