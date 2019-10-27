@@ -30,4 +30,9 @@ processors:
       netinfo.enabled: true
   - add_cloud_metadata: ~
 
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+  pipeline: windows_geo_mitre
+
+
 xpack.monitoring.enabled: true

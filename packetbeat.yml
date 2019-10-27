@@ -45,8 +45,11 @@ packetbeat.procs:
   enabled: true
 
 processors:
-  - add_host_metadata:
-        netinfo.enabled: true
+  - add_host_metadata: ~
   - add_cloud_metadata: ~
+
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+  pipeline: geoip-info
 
 xpack.monitoring.enabled: true

@@ -1,0 +1,141 @@
+{
+    "description" : "mitre",
+    "processors" : [
+      {
+        "set" : {
+          "field" : "mitre_raw",
+          "value" : "{{tags.0}}"
+        }
+      },
+      {
+        "dissect" : {
+          "if" : "ctx.mitre_raw.contains('T')",
+          "field" : "mitre_raw",
+          "pattern" : "%{mitre.technique.id}_%{mitre.technique.name}",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "gsub" : {
+          "field" : "mitre.technique.name",
+          "pattern" : "_",
+          "replacement" : " ",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "set" : {
+          "if" : "ctx.mitre_raw.contains('T')",
+          "field" : "threat.framework",
+          "value" : "MITRE ATT&CK"
+        }
+      },
+      {
+        "set" : {
+          "if" : "ctx.mitre_raw.contains('T')",
+          "field" : "threat.technique.id",
+          "value" : "{{mitre.technique.id}}"
+        }
+      },
+      {
+        "set" : {
+          "if" : "ctx.mitre_raw.contains('T')",
+          "field" : "threat.technique.name",
+          "value" : "{{mitre.technique.name}}"
+        }
+      },
+      {
+        "set" : {
+          "if" : "ctx.mitre_raw.contains('T')",
+          "field" : "threat.technique.reference",
+          "value" : "https://attack.mitre.org/techniques/{{mitre.technique.id}}/"
+        }
+      },
+      {
+        "remove" : {
+          "field" : "mitre_raw",
+          "ignore_missing" : true
+        }
+      },
+            {
+        "geoip" : {
+          "field" : "client.ip",
+          "target_field" : "client.geo",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "field" : "source.ip",
+          "target_field" : "source.geo",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "field" : "destination.ip",
+          "target_field" : "destination.geo",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "field" : "server.ip",
+          "target_field" : "server.geo",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "field" : "source.ip",
+          "target_field" : "source.as",
+          "properties" : [
+            "asn",
+            "organization_name"
+          ],
+          "ignore_missing" : true,
+          "database_file" : "GeoLite2-ASN.mmdb"
+        }
+      },
+      {
+        "rename" : {
+          "field" : "source.as.asn",
+          "target_field" : "source.as.number",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "rename" : {
+          "field" : "source.as.organization_name",
+          "target_field" : "source.as.organization.name",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "geoip" : {
+          "field" : "destination.ip",
+          "target_field" : "destination.as",
+          "properties" : [
+            "asn",
+            "organization_name"
+          ],
+          "ignore_missing" : true,
+          "database_file" : "GeoLite2-ASN.mmdb"
+        }
+      },
+      {
+        "rename" : {
+          "field" : "destination.as.asn",
+          "target_field" : "destination.as.number",
+          "ignore_missing" : true
+        }
+      },
+      {
+        "rename" : {
+          "field" : "destination.as.organization_name",
+          "target_field" : "destination.as.organization.name",
+          "ignore_missing" : true
+        }
+      }
+    ]
+  }

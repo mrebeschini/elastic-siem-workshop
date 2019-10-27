@@ -1,5 +1,5 @@
-#!/bin/bash                                                                                                                                                                                                                              
-CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/" 
+#!/bin/bash
+CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
 ZEEK_DIR=$HOME/zeek
 STACK_VERSION=7.4.0
 
@@ -8,7 +8,7 @@ echo "* Elastic SIEM Workshop Beats Installer *"
 echo "*****************************************"
 
 if [[ $EUID -ne 0 ]]; then
-   echo "Error: this script must be run as root." 
+   echo "Error: this script must be run as root."
    exit 1
 fi
 
@@ -45,10 +45,10 @@ function install_beat() {
         BEAT_PKG_NAME="heartbeat-elastic"
     else
         BEAT_PKG_NAME=$BEAT_NAME
-    fi 
+    fi
 
     yum -q list installed $BEAT_PKG_NAME &> /dev/null
-    if [ $? -eq 0 ]; then 
+    if [ $? -eq 0 ]; then
         echo "$BEAT_NAME was previously installed. Uninstalling first..."
         yum -y -q remove $BEAT_PKG_NAME &> /dev/null
         rm -Rf /etc/$BEAT_NAME /var/lib/$BEAT_NAME /var/log/$BEAT_NAME /usr/share/$BEAT_NAME
@@ -60,13 +60,13 @@ function install_beat() {
     chmod go-w /etc/$BEAT_NAME/$BEAT_NAME.yml
     echo "Setting up $BEAT_NAME keystore with Elastic Cloud credentials"
     $BEAT_NAME keystore create
-    echo $CLOUD_ID | $BEAT_NAME keystore add CLOUD_ID --stdin 
+    echo $CLOUD_ID | $BEAT_NAME keystore add CLOUD_ID --stdin
     echo $CLOUD_AUTH | $BEAT_NAME keystore add --stdin CLOUD_AUTH --force
     if [ $? -ne 0 ]; then
         echo "Invalid CLOUD_ID. Installation aborted!"
         exit 2
     fi
-    
+
     case $BEAT_NAME in
         auditbeat)
             wget -q -N $CONFIG_REPOSITORY_URL/auditd-attack.rules.conf -P /etc/auditbeat/audit.rules.d
@@ -97,6 +97,31 @@ function install_beat() {
     $BEAT_NAME test output
     echo -e "$BEAT_NAME setup complete"
 }
+
+function decode_cloud_id() {
+
+  base64url=`echo "$CLOUD_ID" | awk -F':' '{ print $2 }'`
+  url=`echo $base64url | base64 --decode`
+
+  es=`echo $url | awk -F'$' '{ print $2 }'`
+  region=`echo $url | awk -F'$' '{ print $1 }'`
+
+  es_url=https://$es.$region
+
+
+}
+
+decode_cloud_id
+#Load up ingest pipelines
+echo -e "\n\nLoading additional Ingest Pipelines"
+wget -q -N $CONFIG_REPOSITORY_URL/generic_geo_pipeline.json
+wget -q -N $CONFIG_REPOSITORY_URL/mitre_geo_auditbeat_pipeline.json
+wget -q -N $CONFIG_REPOSITORY_URL/mitre_geo_winlogbeat_pipeline.json
+
+curl --silent -XPUT elastic:$CLOUD_AUTH "https://${es_url}/_ingest/pipeline/mitre_auditbeat" -H "Content-Type: application/json" -d @mitre_geo_auditbeat_pipeline.json
+curl --silent -XPUT elastic:$CLOUD_AUTH "https://${es_url}/_ingest/pipeline/windows_geo_mitre" -H "Content-Type: application/json" -d @mitre_geo_winlogbeat_pipeline.json
+curl --silent -XPUT elastic:$CLOUD_AUTH "https://${es_url}/_ingest/pipeline/geoip-info" -H "Content-Type: application/json" -d @generic_geo_pipeline.json
+
 
 install_beat "auditbeat"
 install_beat "packetbeat"
