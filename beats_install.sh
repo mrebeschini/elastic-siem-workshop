@@ -118,9 +118,9 @@ wget -q -N $CONFIG_REPOSITORY_URL/generic_geo_pipeline.json
 wget -q -N $CONFIG_REPOSITORY_URL/mitre_geo_auditbeat_pipeline.json
 wget -q -N $CONFIG_REPOSITORY_URL/mitre_geo_winlogbeat_pipeline.json
 
-curl --silent -XPUT elastic:$CLOUD_AUTH "https://${es_url}/_ingest/pipeline/mitre_auditbeat" -H "Content-Type: application/json" -d @mitre_geo_auditbeat_pipeline.json
-curl --silent -XPUT elastic:$CLOUD_AUTH "https://${es_url}/_ingest/pipeline/windows_geo_mitre" -H "Content-Type: application/json" -d @mitre_geo_winlogbeat_pipeline.json
-curl --silent -XPUT elastic:$CLOUD_AUTH "https://${es_url}/_ingest/pipeline/geoip-info" -H "Content-Type: application/json" -d @generic_geo_pipeline.json
+curl --silent -XPUT elastic:$CLOUD_AUTH "${es_url}/_ingest/pipeline/mitre_auditbeat" -H "Content-Type: application/json" -d @mitre_geo_auditbeat_pipeline.json
+curl --silent -XPUT elastic:$CLOUD_AUTH "${es_url}/_ingest/pipeline/windows_geo_mitre" -H "Content-Type: application/json" -d @mitre_geo_winlogbeat_pipeline.json
+curl --silent -XPUT elastic:$CLOUD_AUTH "${es_url}/_ingest/pipeline/geoip-info" -H "Content-Type: application/json" -d @generic_geo_pipeline.json
 
 
 install_beat "auditbeat"
