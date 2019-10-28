@@ -98,26 +98,26 @@ function install_beat() {
     echo -e "$BEAT_NAME setup complete"
 }
 
-function decode_cloud_id() {
-  base64url=`echo "$CLOUD_ID" | awk -F':' '{ print $2 }'`
-  url=`echo $base64url | base64 --decode`
-
-  es=`echo $url | awk -F'$' '{ print $2 }'`
-  region=`echo $url | awk -F'$' '{ print $1 }'`
-
-  es_url=https://$es.$region
-}
-
-#Load up ingest pipelines
-decode_cloud_id
-echo -e "\n\nLoading additional Ingest Pipelines"
-wget -q -N $CONFIG_REPOSITORY_URL/pipeline_generic_geo.json
-wget -q -N $CONFIG_REPOSITORY_URL/pipeline_mitre_geo_auditbeat.json
-wget -q -N $CONFIG_REPOSITORY_URL/pipeline_mitre_geo_winlogbeat.json
-curl --silent --user elastic:$CLOUD_AUTH -XPUT "${es_url}/_ingest/pipeline/geoip-info" -H "Content-Type: application/json" -d @pipeline_generic_geo.json
-curl --silent --user elastic:$CLOUD_AUTH -XPUT "${es_url}/_ingest/pipeline/mitre_auditbeat" -H "Content-Type: application/json" -d @pipeline_mitre_geo_auditbeat.json
-curl --silent --user elastic:$CLOUD_AUTH -XPUT "${es_url}/_ingest/pipeline/windows_geo_mitre" -H "Content-Type: application/json" -d @pipeline_mitre_geo_winlogbeat.json
-rm -f pipeline_*.json
+function decode_cloud_id() {                                                                                                                                                      
+  BASE64URL=`echo "$CLOUD_ID" | awk -F':' '{ print $2 }'`                                                                                                                         
+  URL=`echo $BASE64URL | base64 --decode`                                                                                                                                         
+                                                                                                                                                                                  
+  ES=`echo $URL | awk -F'$' '{ print $2 }'`                                                                                                                                       
+  REGION=`echo $URL | awk -F'$' '{ print $1 }'`                                                                                                                                   
+                                                                                                                                                                                  
+  ES_URL=https://$ES.$REGION                                                                                                                                                      
+}                                                                                                                                                                                 
+                                                                                                                                                                                  
+#Load up ingest pipelines                                                                                                                                                         
+decode_cloud_id                                                                                                                                                                   
+echo -e "\nLoading MITRE/GEO Ingest Pipelines into ${ES_URL}"                                                                                                                     
+wget -q -N $CONFIG_REPOSITORY_URL/pipeline_generic_geo.json                                                                                                                       
+wget -q -N $CONFIG_REPOSITORY_URL/pipeline_mitre_geo_auditbeat.json                                                                                                               
+wget -q -N $CONFIG_REPOSITORY_URL/pipeline_mitre_geo_winlogbeat.json                                                                                                              
+curl --silent --user elastic:$CLOUD_AUTH -XPUT "${ES_URL}/_ingest/pipeline/geoip-info" -H "Content-Type: application/json" -d @pipeline_generic_geo.json                          
+curl --silent --user elastic:$CLOUD_AUTH -XPUT "${ES_URL}/_ingest/pipeline/mitre_auditbeat" -H "Content-Type: application/json" -d @pipeline_mitre_geo_auditbeat.json             
+curl --silent --user elastic:$CLOUD_AUTH -XPUT "${ES_URL}/_ingest/pipeline/windows_geo_mitre" -H "Content-Type: application/json" -d @pipeline_mitre_geo_winlogbeat.json          
+rm -f pipeline_*.json  
 
 #Install Beats
 install_beat "auditbeat"
