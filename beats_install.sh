@@ -1,7 +1,7 @@
 #!/bin/bash
 CONFIG_REPOSITORY_URL="https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
 ZEEK_DIR=$HOME/zeek
-STACK_VERSION=7.4.1
+STACK_VERSION=7.4.2
 
 echo "*****************************************"
 echo "* Elastic SIEM Workshop Beats Installer *"
