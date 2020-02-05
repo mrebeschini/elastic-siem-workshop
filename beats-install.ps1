@@ -1,4 +1,4 @@
-$StackVersion = '7.4.2'
+$StackVersion = '7.5.2'
 $InstallFolder = "C:\Program Files\Elastic"
 $ConfigRepositoryURL = "https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
 
