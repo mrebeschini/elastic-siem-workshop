@@ -1,10 +1,24 @@
 <powershell>
     $SrcUri = "https://raw.githubusercontent.com/mrebeschini/elastic-siem-workshop/master/"
     $HomeDir = "C:\Users\Administrator\Elastic\"
+    $TempDir = "C:\Windows\Temp\"
     New-Item -Path $HomeDir -Type directory
 
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest -Uri "$SrcUri/beats-install.ps1" -OutFile "$HomeDir\beats-install.ps1"
     Invoke-WebRequest -Uri "$SrcUri/sysmon-install.ps1" -OutFile "$HomeDir\sysmon-install.ps1"
+    
+    Invoke-WebRequest -Uri "https://www.python.org/ftp/python/2.7.17/python-2.7.17.amd64.msi" -OutFile "$TempDir\python.msi"
+    $MSIArguments = $("/i", "$TempDir\python.msi", "/qn", "/norestart", "ADDLOCAL=ALL")
+    Start-Process "msiexec.exe" -ArgumentList $MSIArguments -Wait -NoNewWindow
+    
+    Invoke-WebRequest -Uri "https://github.com/endgameinc/RTA/archive/master.zip" -OutFile "$TempDir\RTA.zip" 
+    Expand-Archive -Path "$TempDir\RTA.zip" -DestinationPath $HomeDir\
+    
+    $Command = "Set-MpPreference -DisableRealtimeMonitoring $true"
+    Invoke-Expression $Command
+    
+    Remove-Item -Recurse -Force "C:\Users\Administrator\eclipse-workspace"
+    eclipse-workspace
 </powershell>
 <persist>true</persist>
