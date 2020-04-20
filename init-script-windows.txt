@@ -15,7 +15,7 @@
     Invoke-WebRequest -Uri "https://github.com/endgameinc/RTA/archive/master.zip" -OutFile "$TempDir\RTA.zip" 
     Expand-Archive -Path "$TempDir\RTA.zip" -DestinationPath $HomeDir\
     
-    Invoke-Expression "Set-MpPreference -DisableRealtimeMonitoring $true"
+    Invoke-Expression "Set-MpPreference -DisableRealtimeMonitoring 1"
     
     Remove-Item -Recurse -Force "C:\Users\Administrator\eclipse-workspace"
 </powershell>
