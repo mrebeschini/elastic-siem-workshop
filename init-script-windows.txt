@@ -19,6 +19,5 @@
     Invoke-Expression $Command
     
     Remove-Item -Recurse -Force "C:\Users\Administrator\eclipse-workspace"
-    eclipse-workspace
 </powershell>
 <persist>true</persist>
