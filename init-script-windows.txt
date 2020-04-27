@@ -4,6 +4,9 @@
     $TempDir = "C:\Windows\Temp\"
     New-Item -Path $HomeDir -Type directory
 
+    Invoke-Expression "Set-MpPreference -DisableRealtimeMonitoring 1"
+    Invoke-Expression "Set-MpPreference -ExclusionPath C:\Users\Administrator\Elastic"
+
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-WebRequest -Uri "$SrcUri/beats-install.ps1" -OutFile "$HomeDir\beats-install.ps1"
     Invoke-WebRequest -Uri "$SrcUri/sysmon-install.ps1" -OutFile "$HomeDir\sysmon-install.ps1"
@@ -14,8 +17,6 @@
     
     Invoke-WebRequest -Uri "https://github.com/endgameinc/RTA/archive/master.zip" -OutFile "$TempDir\RTA.zip" 
     Expand-Archive -Path "$TempDir\RTA.zip" -DestinationPath $HomeDir\
-    
-    Invoke-Expression "Set-MpPreference -DisableRealtimeMonitoring 1"
     
     Remove-Item -Recurse -Force "C:\Users\Administrator\eclipse-workspace"
 </powershell>
